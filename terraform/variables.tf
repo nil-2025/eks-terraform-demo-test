@@ -3,7 +3,7 @@ variable "region" {
 }
 
 variable "cluster_name" {
-  default = "demo-eks"
+  default = "demo-eks-test-nil"
 }
 
 variable "cluster_version" {
