@@ -35,12 +35,14 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: terraform
 
-      # 6️⃣ Configure kubectl dynamically using Terraform output
-      - name: Configure kubectl dynamically
+      # 6️⃣ Configure kubectl dynamically and wait for nodes
+      - name: Configure kubectl and wait for nodes
         run: |
           CLUSTER_NAME=$(terraform output -raw cluster_name)
           echo "Using cluster: $CLUSTER_NAME"
           aws eks update-kubeconfig --name $CLUSTER_NAME --region ap-south-1
+          echo "Waiting for all nodes to be ready..."
+          kubectl wait --for=condition=Ready nodes --all --timeout=600s
         working-directory: terraform
 
       # 7️⃣ Deploy nginx Kubernetes app
@@ -48,3 +50,10 @@ jobs:
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
+
+      # 8️⃣ Output LoadBalancer URL
+      - name: Get nginx Service URL
+        run: |
+          echo "Waiting for LoadBalancer IP..."
+          kubectl wait --for=condition=available --timeout=300s svc/nginx-service
+          kubectl get svc nginx-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
