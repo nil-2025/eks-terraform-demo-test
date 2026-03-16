@@ -3,7 +3,9 @@ variable "region" {
 }
 
 variable "cluster_name" {
-  default = "demo-eks-test-new"
+  description = "EKS cluster name"
+  type        = string
+  default     = "demo-eks-test"  # or any name you like
 }
 
 variable "cluster_version" {
