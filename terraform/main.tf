@@ -33,5 +33,5 @@ module "eks" {
     }
   }
 # Disable KMS encryption to avoid alias conflicts
-  enable_kms_encryption = false
+#  enable_kms_encryption = false
 }
