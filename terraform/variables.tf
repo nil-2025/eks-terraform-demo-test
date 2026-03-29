@@ -9,5 +9,5 @@ variable "cluster_name" {
 }
 
 variable "cluster_version" {
-  default = "1.29"
+  default = "1.30"
 }
